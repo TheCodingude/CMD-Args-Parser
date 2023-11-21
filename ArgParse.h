@@ -12,6 +12,7 @@ typedef struct {
     char** argv;
 } Args;
 
+char* next_arg(Args* args);
 
 bool expect_bool(Args *args);
 char* expect_string(Args *args, char* expected);
@@ -19,6 +20,14 @@ char* expect_filepath(Args *args, bool exists);
 char* expect_flag(Args *args, char* expect_flag);
 int expect_int(Args *args);
 float expect_float(Args *args);
+
+bool predict_bool(Args *args);
+char* predict_string(Args *args, char* expected);
+char* predict_filepath(Args *args, bool exists);
+char* predict_flag(Args *args, char* expect_flag);
+int predict_int(Args *args);
+float predict_float(Args *args);
+
 
 
 #endif
@@ -33,6 +42,27 @@ void push_back(Args *args){
         exit(1);
     }
 }
+
+char* next_arg(Args* args){
+    push_back(args);
+    return args->argv[0];
+}
+
+char* predict_bool(Args *args, bool* result){
+    push_back(args);
+
+    if(strcmp(args->argv[0], "true") == 0){
+        result = true;
+        return NULL;
+    } else if(strcmp(args->argv[0], "false") == 0){
+        result = false;
+        return NULL;
+    }else{
+        result = NULL;
+        return args->argv[0];
+    }
+}
+
 
 float expect_float(Args *args){
 
